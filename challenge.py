@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 import socket
 import sys
 
@@ -40,6 +41,14 @@ def guess_char(f, prefix):
     return (prefix + chr(begin), found)
 
 def main():
+    whitelist_pattern = re.compile(r'^[a-zA-Z]+$')
+    dictionary = [
+        w for w in
+        (l.strip() for l in open("/usr/share/dict/words").readlines())
+        if whitelist_pattern.match(w)
+    ]
+    threshold = 3
+
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(('challenge.geekcamp.sg', 5000))
     f = s.makefile('rw')
@@ -56,6 +65,17 @@ def main():
     prefix = ''
     while not found:
         prefix, found = guess_char(f, prefix)
+
+        if not found:
+            matched_words = [w for w in dictionary if w.startswith(prefix)]
+            if len(matched_words) <= threshold:
+                print(matched_words)
+
+                for word in matched_words:
+                    found = (test(f, word) == '=')
+
+                    if found:
+                        break
 
     s.close()
 
