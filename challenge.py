@@ -57,5 +57,7 @@ def main():
     while not found:
         prefix, found = guess_char(f, prefix)
 
+    s.close()
+
 if __name__ == '__main__':
     main()
