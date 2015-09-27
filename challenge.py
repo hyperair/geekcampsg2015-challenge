@@ -47,7 +47,7 @@ def main():
         (l.strip() for l in open("/usr/share/dict/words").readlines())
         if whitelist_pattern.match(w)
     ]
-    threshold = 3
+    threshold = 4
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(('challenge.geekcamp.sg', 5000))
